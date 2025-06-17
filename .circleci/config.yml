@@ -56,6 +56,7 @@ jobs:
       - run:
           name: Upload screenshots to Screenshotbot
           command: |
+            pwd
             ~/screenshotbot/recorder \
               --directory test/goldens \
               --channel flutter-example
