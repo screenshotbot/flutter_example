@@ -1,0 +1,73 @@
+version: 2.1
+
+# Define a job to be invoked later in a workflow
+jobs:
+  test:
+    # Use the official CircleCI Flutter Docker image
+    docker:
+      - image: cimg/android:2024.01.1
+    
+    # Set the working directory
+    working_directory: ~/project
+    
+    steps:
+      # Checkout the code from the repository
+      - checkout
+      
+      # Install Flutter
+      - run:
+          name: Install Flutter
+          command: |
+            cd ~
+            git clone https://github.com/flutter/flutter.git -b stable --depth 1
+            echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
+            flutter --version
+      
+      # Cache Flutter dependencies
+      - restore_cache:
+          keys:
+            - flutter-cache-v1-{{ checksum "pubspec.lock" }}
+            - flutter-cache-v1-
+      
+      # Get Flutter dependencies
+      - run:
+          name: Get Flutter dependencies
+          command: flutter pub get
+      
+      # Save Flutter dependencies to cache
+      - save_cache:
+          key: flutter-cache-v1-{{ checksum "pubspec.lock" }}
+          paths:
+            - ~/.pub-cache
+      
+      # Run Flutter analyzer
+      - run:
+          name: Run Flutter analyzer
+          command: flutter analyze
+      
+      # Accept Android licenses (needed for some dependencies)
+      - run:
+          name: Accept Android licenses
+          command: yes | flutter doctor --android-licenses || true
+      
+      # Run Flutter tests (including golden tests)
+      - run:
+          name: Run Flutter tests
+          command: flutter test
+      
+      # Store test results
+      - store_test_results:
+          path: test-results
+      
+      # Store artifacts (including golden test failures if any)
+      - store_artifacts:
+          path: test/goldens
+          destination: golden-files
+
+# Define workflows
+workflows:
+  version: 2
+  test_workflow:
+    jobs:
+      - test
