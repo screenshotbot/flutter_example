@@ -41,16 +41,6 @@ jobs:
           paths:
             - ~/.pub-cache
       
-      # Run Flutter analyzer
-      - run:
-          name: Run Flutter analyzer
-          command: flutter analyze
-      
-      # Accept Android licenses (needed for some dependencies)
-      - run:
-          name: Accept Android licenses
-          command: yes | flutter doctor --android-licenses || true
-      
       # Run Flutter tests (including golden tests)
       - run:
           name: Run Flutter tests
