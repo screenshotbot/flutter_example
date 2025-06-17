@@ -57,6 +57,8 @@ jobs:
           name: Upload screenshots to Screenshotbot
           command: |
             pwd
+            find .
+            ls
             ~/screenshotbot/recorder \
               --directory test/goldens \
               --channel flutter-example
