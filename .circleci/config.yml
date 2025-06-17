@@ -55,7 +55,20 @@ jobs:
       - run:
           name: Run Flutter tests
           command: flutter test --update-goldens
+
+      - run:
+          name: Install Screenshotbot CLI
+          command: |
+            curl https://cdn.screenshotbot.io/recorder.sh | sh
       
+      # Upload golden tests to Screenshotbot
+      - run:
+          name: Upload screenshots to Screenshotbot
+          command: |
+            ~/screenshotbot/recorder \
+              --directory test/goldens \
+              --channel flutter-example
+          
       # Store test results
       - store_test_results:
           path: test-results
