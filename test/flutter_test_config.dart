@@ -24,13 +24,21 @@ class AlwaysUpdateGoldenFileComparator extends LocalFileComparator {
     await goldenFile.writeAsBytes(imageBytes);
     return true; // Always pass
   }
+
+  @override
+  Future<void> update(Uri golden, Uint8List imageBytes) async {
+    // This method is called when --update-goldens is used
+    // Use the same logic as compare() to ensure consistent paths
+    await compare(imageBytes, golden);
+  }
 }
 
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   // Set up always-update golden file comparator for all tests
-  goldenFileComparator = AlwaysUpdateGoldenFileComparator(Uri.parse('test/'));
+//  goldenFileComparator = AlwaysUpdateGoldenFileComparator(Uri.parse('test/'));
   
   // Run the tests
   return testMain();
 }
+
 
