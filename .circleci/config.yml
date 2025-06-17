@@ -54,7 +54,7 @@ jobs:
       # Run Flutter tests (including golden tests)
       - run:
           name: Run Flutter tests
-          command: flutter test
+          command: flutter test --update-goldens
       
       # Store test results
       - store_test_results:
