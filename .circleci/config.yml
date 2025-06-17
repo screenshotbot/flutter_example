@@ -44,7 +44,8 @@ jobs:
       # Run Flutter tests (including golden tests)
       - run:
           name: Run Flutter tests
-          command: flutter test --update-goldens
+          # You can remove --update-goldens if you follow Step 4. in the docs
+          command: flutter test --update-goldens --verbose
 
       - run:
           name: Install Screenshotbot CLI
